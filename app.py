@@ -1,6 +1,3 @@
-# Here's a polished version of the app with better UI, section dividers, emojis, and highlight formatting.
-
-pretty_app_code = """
 import streamlit as st
 import requests
 import openai
@@ -52,7 +49,7 @@ def extract_links_and_bios(results):
 
 # GPT eval
 def evaluate_creator_with_gpt(bio_text):
-    prompt = f\"\"\"
+    prompt = f"""
 You are an expert in brand partnerships at HubSpot. A creator's bio and snippets of their content are provided below.
 
 Your task is to evaluate them for a potential partnership based on these five categories:
@@ -76,7 +73,7 @@ Here’s the content to evaluate:
 \"\"\"
 {bio_text}
 \"\"\"
-\"\"\"
+"""
     response = openai.ChatCompletion.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
@@ -111,9 +108,3 @@ if st.button("Run Evaluation") and creator_input:
 
     st.divider()
     st.caption("Created by Omar @ HubSpot | Powered by OpenAI + Serper.dev")
-"""
-
-with open("/mnt/data/app.py", "w") as f:
-    f.write(pretty_app_code)
-
-"Your Streamlit app is now updated with a cleaner UI and full dashboard layout!"
