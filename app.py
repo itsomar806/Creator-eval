@@ -113,7 +113,7 @@ if st.button("Run Evaluation") and creator_input:
     with left:
         st.markdown(
         "<div style='background-color:#FAFAFA; padding: 1.2rem; border-radius: 10px;'>", unsafe_allow_html=True,
-        platform_icons = {
+        platform_icons:= {
             "YouTube": "📺",
             "LinkedIn": "🔗",
             "Instagram": "📸",
