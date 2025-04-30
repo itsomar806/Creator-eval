@@ -2,7 +2,7 @@
 
 # We'll update the GPT evaluation function to return structured sections and also redesign the Streamlit layout.
 
-structured_dashboard_code = """
+structured_dashboard_code = 
 import streamlit as st
 import requests
 import openai
@@ -122,6 +122,5 @@ if st.button("Run Evaluation") and creator_input:
 
     st.divider()
     st.caption("Created by Omar @ HubSpot | Powered by OpenAI + Serper.dev")
-"""
 
 "Your app now uses a structured layout with detailed Brand Risk explanations and visual improvements!"
