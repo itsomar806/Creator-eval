@@ -95,31 +95,35 @@ if st.button("Run Evaluation") and creator_input:
         full_bio_text = " ".join(bios[:5])
         follower_estimate = estimate_followers(bios)
 
-    st.markdown("<h2 style='text-align: center;'>🌐 Creator Overview</h2>", unsafe_allow_html=True)
-    st.markdown("<div style='background-color:#FAFAFA; padding: 1.5rem; border-radius: 10px;'>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center;'>🌐 Creator Overview</h2>", unsafe_allow_html=True)
+        
+        # Soft white card with rounded corners
+        st.markdown("<div style='background-color:#FAFAFA; padding: 1.5rem; border-radius: 10px;'>", unsafe_allow_html=True)
+        
+        platform_icons = {
+            "YouTube": "📺",
+            "LinkedIn": "🔗",
+            "Instagram": "📸",
+            "TikTok": "🎵",
+            "Twitter": "🐦",
+            "Substack": "✉️",
+            "Podcast": "🎙️",
+            "Medium": "📝",
+            "Website": "🌐"
+        }
+        cols = st.columns(3)
+        i = 0
+        for platform, url in links.items():
+            icon = platform_icons.get(platform, "🔗")
+            cols[i % 3].markdown(f"{icon} [{platform}]({url})")
+            i += 1
+        
+        # Estimated followers (if any)
+        if follower_estimate:
+            st.markdown(f"<p style='margin-top: 1rem; font-size: 16px;'><strong>Total Estimated Audience:</strong> {follower_estimate:,}</p>", unsafe_allow_html=True)
+        
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    platform_icons = {
-        "YouTube": "📺",
-        "LinkedIn": "🔗",
-        "Instagram": "📸",
-        "TikTok": "🎵",
-        "Twitter": "🐦",
-        "Substack": "✉️",
-        "Podcast": "🎙️",
-        "Medium": "📝",
-        "Website": "🌐"
-    }
-    cols = st.columns(3)
-    i = 0
-    for platform, url in links.items():
-        icon = platform_icons.get(platform, "🔗")
-        cols[i % 3].markdown(f"{icon} [{platform}]({url})")
-        i += 1
-
-    if follower_estimate:
-        st.markdown(f"<p style='margin-top: 1rem; font-size: 16px;'><strong>Total Estimated Audience:</strong> {follower_estimate:,}</p>", unsafe_allow_html=True)
-
-    st.markdown("</div>", unsafe_allow_html=True)
     st.divider()
 
     with st.spinner("🤖 Running GPT Evaluation..."):
@@ -153,11 +157,13 @@ if st.button("Run Evaluation") and creator_input:
     """, unsafe_allow_html=True)
 
     st.markdown("### ❤️ HEART Values")
-    st.markdown("<div style='padding: 1.2rem; background-color:#E6F2FF; border-radius: 10px;'>", unsafe_allow_html=True)
+    heart_html = "<div style='padding: 1.2rem; background-color:#E6F2FF; border-radius: 10px;'>"
     for k, v in data["heart_values"].items():
         icon = "✅" if "Yes" in v else "❌"
-        st.markdown(f"<p style='margin: 0.5rem 0;'><strong>{k}:</strong> {icon} — {v}</p>", unsafe_allow_html=True)
-    st.markdown("</div>", unsafe_allow_html=True)
+        heart_html += f"<p style='margin: 0.5rem 0;'><strong>{k}:</strong> {icon} — {v}</p>"
+    heart_html += "</div>"
+    st.markdown(heart_html, unsafe_allow_html=True)
+
 
     st.divider()
 
