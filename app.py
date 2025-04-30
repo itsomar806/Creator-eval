@@ -95,8 +95,8 @@ if st.button("Run Evaluation") and creator_input:
         full_bio_text = " ".join(bios[:5])
         follower_estimate = estimate_followers(bios)
 
-        st.markdown("<h2 style='text-align: center;'>🌐 Creator Overview</h2>", unsafe_allow_html=True)
         st.markdown("<div style='background-color:#FAFAFA; padding: 1.5rem; border-radius: 10px;'>", unsafe_allow_html=True)
+        st.markdown("<h2 style='text-align: center;'>🌐 Creator Overview</h2>", unsafe_allow_html=True)
         
         platform_icons = {
             "YouTube": "📺",
