@@ -111,21 +111,21 @@ if st.button("Run Evaluation") and creator_input:
     left, right = st.columns(2)
 
     with left:
-        st.markdown("<div style='background-color:#FAFAFA; padding: 1.2rem; border-radius: 10px;", unsafe_allow_html=True)
-        platform_icons = {
-            "YouTube": "📺",
-            "LinkedIn": "🔗",
-            "Instagram": "📸",
-            "TikTok": "🎵",
-            "Twitter": "🐦",
-            "Substack": "✉️",
-            "Podcast": "🎙️",
-            "Medium": "📝",
-            "Website": "🌐"
-        }
-        for platform, url in links.items():
-            icon = platform_icons.get(platform, "🔗")
-            st.markdown(f"{icon} [{platform}]({url})")
+        st.markdown("<div style='background-color:#FAFAFA; padding: 1.2rem; border-radius: 10px;'>", unsafe_allow_html=True)
+            platform_icons = {
+                "YouTube": "📺",
+                "LinkedIn": "🔗",
+                "Instagram": "📸",
+                "TikTok": "🎵",
+                "Twitter": "🐦",
+                "Substack": "✉️",
+                "Podcast": "🎙️",
+                "Medium": "📝",
+                "Website": "🌐"
+            }
+            for platform, url in links.items():
+                icon = platform_icons.get(platform, "🔗")
+                st.markdown(f"{icon} [{platform}]({url})")
         st.markdown("</div>", unsafe_allow_html=True)
 
     with right:
