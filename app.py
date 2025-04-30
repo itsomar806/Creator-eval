@@ -124,7 +124,4 @@ if st.button("Run Evaluation") and creator_input:
     st.caption("Created by Omar @ HubSpot | Powered by OpenAI + Serper.dev")
 """
 
-with open("/mnt/data/app.py", "w") as f:
-    f.write(structured_dashboard_code)
-
 "Your app now uses a structured layout with detailed Brand Risk explanations and visual improvements!"
