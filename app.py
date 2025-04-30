@@ -47,7 +47,7 @@ def extract_links_and_bios(results):
     return links, bios
 
 def evaluate_creator_with_gpt_structured(bio_text):
-    prompt = You are an expert brand evaluator at HubSpot. Review the following content and return your evaluation as a dictionary with these fields:
+    prompt = f\"""You are an expert brand evaluator at HubSpot. Review the following content and return your evaluation as a dictionary with these fields:
 
 creator_overview (str)
 content_snapshot (str)
