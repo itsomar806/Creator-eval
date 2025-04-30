@@ -1,16 +1,7 @@
-# Let's create the all-in-one `app.py` for your Streamlit-based Creator Evaluation Tool (Growth Gabby-focused).
-# This version includes:
-# - Identity Resolution via web + social links
-# - Placeholder for future GPT-based evaluation
-# - Streamlit UI layout
-
-app_code = """
 import streamlit as st
 import requests
 from bs4 import BeautifulSoup
-import re
 import openai
-import os
 
 st.set_page_config(page_title="🧠 Creator Evaluation Tool", layout="wide")
 st.title("🧠 Creator Evaluation Tool (Growth Gabby Fit)")
@@ -77,10 +68,3 @@ if st.button("Evaluate") and creator_input:
 
     st.markdown("---")
     st.caption("Powered by OpenAI + Serper.dev")
-
-"""
-
-with open("/mnt/data/app.py", "w") as f:
-    f.write(app_code)
-
-"All-in-one Streamlit `app.py` is ready! Here's what you need to run it:"
