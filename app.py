@@ -111,7 +111,8 @@ if st.button("Run Evaluation") and creator_input:
     left, right = st.columns(2)
 
     with left:
-        st.markdown("<div style='background-color:#FAFAFA; padding: 1.2rem; border-radius: 10px;'>", unsafe_allow_html=True)
+        st.markdown(
+            "<div style='background-color:#FAFAFA; padding: 1.2rem; border-radius: 10px;'>", unsafe_allow_html=True)
         platform_icons = {
             "YouTube": "📺",
             "LinkedIn": "🔗",
