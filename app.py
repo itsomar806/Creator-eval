@@ -47,7 +47,8 @@ def extract_links_and_bios(results):
     return links, bios
 
 def evaluate_creator_with_gpt_structured(bio_text):
-    prompt = f\"""You are an expert brand evaluator at HubSpot. Review the following content and return your evaluation as a dictionary with these fields:
+    prompt = f"""
+You are an expert brand evaluator at HubSpot. Review the following content and return your evaluation as a dictionary with these fields:
 
 creator_overview (str)
 content_snapshot (str)
@@ -55,13 +56,15 @@ fit_score (str: Strong/Medium/Weak)
 fit_reason (str)
 brand_risk (str: Green/Yellow/Red)
 risk_reason (str)
-heart_values (dict: {"Humble": "Yes/No - reason", ...})
+heart_values (dict: {{'Humble': 'Yes/No - reason', ...}})
 recommendation (str: Proceed/Conditional/Decline)
 recommendation_reason (str)
 
 Content:
-\\\"\\\"\\\"{bio_text}\\\"\\\"\\\"
-Only return the JSON object. No intro or extra explanation.\"""  # triple-double quotes with escaped block
+\"\"\"{bio_text}\"\"\"
+
+Only return the JSON object. No intro or extra explanation.
+"""
     response = openai.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
