@@ -104,43 +104,51 @@ if st.button("Run Evaluation") and creator_input:
         i += 1
 
     st.divider()
-
     with st.spinner("🤖 Running GPT Evaluation..."):
         data = evaluate_creator_with_gpt_structured(full_bio_text)
 
     st.markdown("<h2 style='text-align: center;'>📋 Evaluation Dashboard</h2>", unsafe_allow_html=True)
 
-    col1, col2 = st.columns(2)
-    col1.markdown(f"### 🧠 Content Snapshot\\n{data['content_snapshot']}")
-    col2.markdown(f"### 🎯 Audience Fit\\n**{data['fit_score']}** — {data['fit_reason']}")
+    # Content + Fit as colored boxes
+    st.markdown("""
+    <div style='display: flex; gap: 20px; justify-content: space-between;'>
+        <div style='flex: 1; background-color: #F3E8FF; padding: 1rem; border-radius: 10px;'>
+            <h4>🧠 Content Snapshot</h4>
+            <p style='margin-top: 0;'>""" + data['content_snapshot'] + """</p>
+        </div>
+        <div style='flex: 1; background-color: #FFEFD6; padding: 1rem; border-radius: 10px;'>
+            <h4>🎯 Audience Fit</h4>
+            <p><strong>""" + data['fit_score'] + "</strong> — " + data['fit_reason'] + """</p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
 
     st.divider()
 
     color_map = {"Green": "#D4EDDA", "Yellow": "#FFF3CD", "Red": "#F8D7DA"}
     risk_color = color_map.get(data["brand_risk"], "#FFFFFF")
-    risk_block = f'''
+    st.markdown(f"""
     <div style="background-color:{risk_color}; padding: 1rem; border-radius: 10px; text-align: center;">
-        <h3>🧯 Brand Risk Level: {data['brand_risk']}</h3>
+        <h4>🧯 Brand Risk Level: {data['brand_risk']}</h4>
         <p>{data['risk_reason']}</p>
     </div>
-    '''
-    st.markdown(risk_block, unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     st.markdown("### ❤️ HEART Values")
-    st.markdown("<div style='padding: 1rem; background-color:#F0F8FF; border-left: 5px solid #007BFF;'>", unsafe_allow_html=True)
+    st.markdown("<div style='padding: 1.2rem; background-color:#E6F2FF; border-radius: 10px;'>", unsafe_allow_html=True)
     for k, v in data["heart_values"].items():
         icon = "✅" if "Yes" in v else "❌"
-        st.markdown(f"<p><strong>{k}:</strong> {icon} — {v}</p>", unsafe_allow_html=True)
+        st.markdown(f"<p style='margin: 0.5rem 0;'><strong>{k}:</strong> {icon} — {v}</p>", unsafe_allow_html=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.divider()
 
     if "proceed" in data["recommendation"].lower():
-        st.success(f"✅ Recommendation: Proceed\\n\\n{data['recommendation_reason']}")
+        st.success(f"✅ Recommendation: Proceed\n\n{data['recommendation_reason']}")
     elif "conditional" in data["recommendation"].lower():
-        st.warning(f"⚠️ Recommendation: Conditional\\n\\n{data['recommendation_reason']}")
+        st.warning(f"⚠️ Recommendation: Conditional\n\n{data['recommendation_reason']}")
     else:
-        st.error(f"🛑 Recommendation: Decline\\n\\n{data['recommendation_reason']}")
+        st.error(f"🛑 Recommendation: Decline\n\n{data['recommendation_reason']}")
 
     st.divider()
     st.caption("Created by Omar @ HubSpot | Powered by OpenAI + Serper.dev")
