@@ -63,7 +63,8 @@ def estimate_followers(bio_snippets):
     return int(total) if total > 0 else None
 
 def evaluate_creator_with_gpt_structured(bio_text):
-    prompt = f\"\"\"You are an expert brand evaluator at HubSpot. Review the following content and return your evaluation as a dictionary with these fields:
+    prompt = f"""
+You are an expert brand evaluator at HubSpot. Review the following content and return your evaluation as a dictionary with these fields:
 
 creator_overview (str)
 content_snapshot (str)
@@ -79,7 +80,7 @@ Content:
 \"\"\"{bio_text}\"\"\"
 
 Only return the JSON object. No intro or extra explanation.
-\"\"\"
+"""
     response = openai.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
@@ -99,6 +100,9 @@ if st.button("Run Evaluation") and creator_input:
         links, bios = extract_links_and_bios(results)
         full_bio_text = " ".join(bios[:5])
         follower_estimate = estimate_followers(bios)
+
+    with st.spinner("🤖 Running GPT Evaluation..."):
+        data = evaluate_creator_with_gpt_structured(full_bio_text)
 
     st.markdown("<h2 style='text-align: center;'>🌐 Creator Overview</h2>", unsafe_allow_html=True)
     if follower_estimate:
@@ -132,13 +136,12 @@ if st.button("Run Evaluation") and creator_input:
 
     st.divider()
 
-    # Full-width Audience Fit
-    st.markdown("""
+    st.markdown(f"""
     <div style='background-color:#FFEFD6; padding: 1.2rem; border-radius: 10px;'>
         <h4>🎯 Audience Fit</h4>
-        <p><strong>{fit_score}</strong> — {fit_reason}</p>
+        <p><strong>{data["fit_score"]}</strong> — {data["fit_reason"]}</p>
     </div>
-    """.format(fit_score=data["fit_score"], fit_reason=data["fit_reason"]), unsafe_allow_html=True)
+    """, unsafe_allow_html=True)
 
     st.divider()
 
