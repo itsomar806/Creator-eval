@@ -1,0 +1,8 @@
+streamlit
+pandas
+altair
+google-api-python-client
+openai>=1.0.0
+youtube-transcript-api
+google-search-results
+python-dotenv
