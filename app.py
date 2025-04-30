@@ -123,10 +123,10 @@ if st.button("Run Evaluation") and creator_input:
             "Medium": "📝",
             "Website": "🌐"
             }
-            for platform, url in links.items():
-                icon = platform_icons.get(platform, "🔗")
-                st.markdown(f"{icon} [{platform}]({url})")
-        st.markdown("</div>", unsafe_allow_html=True)
+        for platform, url in links.items():
+            icon = platform_icons.get(platform, "🔗")
+            st.markdown(f"{icon} [{platform}]({url})")
+            st.markdown("</div>", unsafe_allow_html=True)
 
     with right:
         st.markdown("<div style='background-color:#F3E8FF; padding: 1.2rem; border-radius: 10px;'>", unsafe_allow_html=True)
