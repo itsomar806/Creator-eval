@@ -74,12 +74,13 @@ Here’s the content to evaluate:
 {bio_text}
 \"\"\"
 """
-    response = openai.ChatCompletion.create(
-        model="gpt-4",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.4
-    )
-    return response.choices[0].message["content"]
+    response = openai.chat.completions.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": prompt}],
+    temperature=0.4
+)
+    return response.choices[0].message.content
+
 
 # STREAMLIT UI
 st.set_page_config(page_title="🧠 Creator Evaluation Tool", layout="wide")
