@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-from bs4 import BeautifulSoup
 import openai
 
 st.set_page_config(page_title="🧠 Creator Evaluation Tool", layout="wide")
