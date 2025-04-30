@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import openai
 import json
+import re
 
 # Load API keys
 openai.api_key = st.secrets["OPENAI_API_KEY"]
@@ -46,6 +47,15 @@ def extract_links_and_bios(results):
                 links["Website"] = link
     return links, bios
 
+def estimate_followers(bio_snippets):
+    text = " ".join(bio_snippets)
+    matches = re.findall(r"(\\d{1,3}[,\\d]{0,5})\\s*(followers|subscribers|fans|audience)", text, re.IGNORECASE)
+    total = 0
+    for num, _ in matches:
+        cleaned = int(num.replace(",", ""))
+        total += cleaned
+    return total if total > 0 else None
+
 def evaluate_creator_with_gpt_structured(bio_text):
     prompt = f"""
 You are an expert brand evaluator at HubSpot. Review the following content and return your evaluation as a dictionary with these fields:
@@ -83,8 +93,11 @@ if st.button("Run Evaluation") and creator_input:
         results = search_creator_online(creator_input)
         links, bios = extract_links_and_bios(results)
         full_bio_text = " ".join(bios[:5])
+        follower_estimate = estimate_followers(bios)
 
-    st.markdown("## 🌐 Creator Overview")
+    st.markdown("<h2 style='text-align: center;'>🌐 Creator Overview</h2>", unsafe_allow_html=True)
+    st.markdown("<div style='background-color:#FAFAFA; padding: 1.5rem; border-radius: 10px;'>", unsafe_allow_html=True)
+
     platform_icons = {
         "YouTube": "📺",
         "LinkedIn": "🔗",
@@ -103,22 +116,27 @@ if st.button("Run Evaluation") and creator_input:
         cols[i % 3].markdown(f"{icon} [{platform}]({url})")
         i += 1
 
+    if follower_estimate:
+        st.markdown(f"<p style='margin-top: 1rem; font-size: 16px;'><strong>Total Estimated Audience:</strong> {follower_estimate:,}</p>", unsafe_allow_html=True)
+
+    st.markdown("</div>", unsafe_allow_html=True)
     st.divider()
+
     with st.spinner("🤖 Running GPT Evaluation..."):
         data = evaluate_creator_with_gpt_structured(full_bio_text)
 
     st.markdown("<h2 style='text-align: center;'>📋 Evaluation Dashboard</h2>", unsafe_allow_html=True)
 
     # Content + Fit as colored boxes
-    st.markdown("""
+    st.markdown(f"""
     <div style='display: flex; gap: 20px; justify-content: space-between;'>
         <div style='flex: 1; background-color: #F3E8FF; padding: 1rem; border-radius: 10px;'>
             <h4>🧠 Content Snapshot</h4>
-            <p style='margin-top: 0;'>""" + data['content_snapshot'] + """</p>
+            <p style='margin-top: 0;'>{data['content_snapshot']}</p>
         </div>
         <div style='flex: 1; background-color: #FFEFD6; padding: 1rem; border-radius: 10px;'>
             <h4>🎯 Audience Fit</h4>
-            <p><strong>""" + data['fit_score'] + "</strong> — " + data['fit_reason'] + """</p>
+            <p><strong>{data['fit_score']}</strong> — {data['fit_reason']}</p>
         </div>
     </div>
     """, unsafe_allow_html=True)
