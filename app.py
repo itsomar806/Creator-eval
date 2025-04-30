@@ -1,3 +1,6 @@
+# We'll update the GPT evaluation function to return structured sections and also redesign the Streamlit layout.
+
+structured_dashboard_code = """
 import streamlit as st
 import requests
 import openai
@@ -11,14 +14,12 @@ headers = {
     "Content-Type": "application/json"
 }
 
-# Serper search
 def search_creator_online(query):
     url = "https://google.serper.dev/search"
     data = {"q": query}
     res = requests.post(url, json=data, headers=headers)
     return res.json()
 
-# Extract links and bios
 def extract_links_and_bios(results):
     links = {}
     bios = []
@@ -47,45 +48,52 @@ def extract_links_and_bios(results):
                 links["Website"] = link
     return links, bios
 
-# GPT eval
-def evaluate_creator_with_gpt(bio_text):
-    prompt = f"""
-You are an expert in brand partnerships at HubSpot. A creator's bio and snippets of their content are provided below.
+def evaluate_creator_with_gpt_structured(bio_text):
+    prompt = f'''
+You are an expert brand evaluator at HubSpot. Review the following content and return your evaluation as structured markdown with clear formatting for Streamlit display.
 
-Your task is to evaluate them for a potential partnership based on these five categories:
-
-1. **Creator Overview**: What do you know about them? What platforms are they on?
-2. **Content Snapshot**: What topics do they cover, what's their tone, and what is their content style?
-3. **Audience Fit: Growth Gabby Persona**:
-   - Growth Gabby is a 35–55-year-old Founder, CRO, or RevOps leader.
-   - She's focused on growth, automation, innovation, and customer experience.
-   - Score fit as: Strong / Medium / Weak — and explain why.
-4. **Brand Safety & HEART Values**:
-   - HEART = Humble, Empathetic, Adaptable, Remarkable, Transparent.
-   - Note any red flags or misalignments.
-   - Assign a Brand Risk level (Red / Yellow / Green).
-   - For each HEART value, mark Yes/No with a short reason.
-5. **Final Recommendation**:
-   - ✅ Proceed / ⚠️ Conditional / 🛑 Decline
-   - Include a 2–3 sentence rationale.
-
-Here’s the content to evaluate:
+Content:
 \"\"\"
 {bio_text}
 \"\"\"
-"""
-    response = openai.chat.completions.create(
-    model="gpt-4",
-    messages=[{"role": "user", "content": prompt}],
-    temperature=0.4
-)
-    return response.choices[0].message.content
 
+Output in the following markdown structure:
+
+### 🌐 Creator Overview
+Short summary of who the creator is and their platforms.
+
+### 🧠 Content Snapshot
+Summarize tone, themes, and style in 2–3 sentences.
+
+### 🎯 Audience Fit: Growth Gabby
+- **Fit Score:** Strong / Medium / Weak
+- **Why:** (Short explanation)
+
+### 🧯 Brand Safety & HEART Values
+- **Brand Risk Level:** Green / Yellow / Red
+- **Why:** (Explain risk level in 2–3 sentences)
+- **Humble:** Yes/No – reason
+- **Empathetic:** Yes/No – reason
+- **Adaptable:** Yes/No – reason
+- **Remarkable:** Yes/No – reason
+- **Transparent:** Yes/No – reason
+
+### ✅ Final Recommendation
+- **Decision:** ✅ Proceed / ⚠️ Conditional / 🛑 Decline
+- **Why:** Short rationale (2–3 sentences)
+'''
+
+    response = openai.chat.completions.create(
+        model="gpt-4",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.4
+    )
+    return response.choices[0].message.content
 
 # STREAMLIT UI
 st.set_page_config(page_title="🧠 Creator Evaluation Tool", layout="wide")
 st.title("🧠 Creator Evaluation Tool (Growth Gabby Fit)")
-st.markdown("Use this tool to evaluate if a creator is a strong fit for HubSpot partnerships — no media kit required.")
+st.markdown("Evaluate a creator’s audience fit, tone, and values based on public content — without needing a media kit.")
 
 creator_input = st.text_input("🔍 Enter a creator name, handle, or website:")
 
@@ -93,19 +101,28 @@ if st.button("Run Evaluation") and creator_input:
     with st.spinner("🔎 Searching for online presence..."):
         results = search_creator_online(creator_input)
         links, bios = extract_links_and_bios(results)
-        full_bio_text = " ".join(bios[:5])  # limit to first 5 snippets
+        full_bio_text = " ".join(bios[:5])  # limit to 5 search snippets
 
     st.markdown("## 🌐 Creator Overview")
+    cols = st.columns(3)
+    i = 0
     for platform, url in links.items():
-        st.markdown(f"- **{platform}:** [{url}]({url})")
+        cols[i % 3].markdown(f"**{platform}:** [{url}]({url})")
+        i += 1
 
     st.divider()
 
-    with st.spinner("🤖 Evaluating creator fit and brand alignment..."):
-        evaluation = evaluate_creator_with_gpt(full_bio_text)
+    with st.spinner("🤖 Running structured GPT evaluation..."):
+        evaluation = evaluate_creator_with_gpt_structured(full_bio_text)
 
     st.markdown("## 📋 Evaluation Dashboard")
     st.markdown(evaluation)
 
     st.divider()
     st.caption("Created by Omar @ HubSpot | Powered by OpenAI + Serper.dev")
+"""
+
+with open("/mnt/data/app.py", "w") as f:
+    f.write(structured_dashboard_code)
+
+"Your app now uses a structured layout with detailed Brand Risk explanations and visual improvements!"
