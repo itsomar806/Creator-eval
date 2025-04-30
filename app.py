@@ -1,5 +1,7 @@
 # We'll update the GPT evaluation function to return structured sections and also redesign the Streamlit layout.
 
+# We'll update the GPT evaluation function to return structured sections and also redesign the Streamlit layout.
+
 structured_dashboard_code = """
 import streamlit as st
 import requests
